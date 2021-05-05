@@ -47,8 +47,6 @@ class Subito_Plugin {
         $json_a = json_decode($xml, true);
         if(count($json_a["ads"]==$limit)) {
         foreach($json_a["ads"] as $ad) {
-            //var_dump($thisad["images"][0]["scale"][3]);
-            //echo $thisad["images"][0]["scale"][3];
             $thisad = $ad;
             $output.= "<a href='".$thisad["urls"]["default"]."?utm_source=subito-widget'>";
             $output.= "<div id='subito-box' style='display:block; float:left; text-align:center; color:#3c4858; font-family: LFTEtica,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;'>"; //ad-box
