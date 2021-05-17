@@ -1,4 +1,4 @@
-  /**
+
      * Widget generation
      *
      * In the wp page insert the shortcode [subito_widget]
@@ -9,4 +9,4 @@
      * u userid of the user you wanna extract the ads 
      * 
      * u and q parameters are self excluding. Limits applies to both.
-     */
+
