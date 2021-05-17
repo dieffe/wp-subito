@@ -29,26 +29,39 @@ class Subito_Plugin {
      * q [mandatory] query. No whitespaces, use + instead. e.g.: audi+a4 
      * l number of ads rendered
      * c category, e.g.: 16 ( Abbigliamento ed Accessori )
+     * u userid of the user you wanna extract the ads 
+     * 
+     * u and q parameters are self excluding. Limits applies to both.
      */
     public function render_subito_widget( $attributes, $content = null ) {
         $query = $attributes['q'];
         $cat = $attributes['c'];
         $limit = $attributes['l'];
+        //adding extract by user
+        $user = $attributes['u'];
+
+        //endpoint creation
+        if($query!='') {
+            $endpoint="https://hades.subito.it/v1/search/items?q=".$query."&lim=".$limit."&bust-cache=".rand(5, 15);
+        }
+
+        if($user!='') {
+            $endpoint="https://hades.subito.it/v1/search/items?uid=".$user."&lim=".$limit."&bust-cache=".rand(5, 15);
+        }
+
         //sanify q
         $query=str_replace(" ","+",$query);
         if($limit=='') $limit=5;
         $output="";
         $output.= "<div style='display:flex'>";
-        $endpoint="https://hades.subito.it/v1/search/items?q=".$query."&lim=".$limit."&bust-cache=".rand(5, 15);
+        
         if($cat) {
             $endpoint.="&c=".$cat;
         }
         $xml = file_get_contents($endpoint);
         $json_a = json_decode($xml, true);
-        if(count($json_a["ads"])==$limit) {
+
         foreach($json_a["ads"] as $ad) {
-            //var_dump($thisad["images"][0]["scale"][3]);
-            //echo $thisad["images"][0]["scale"][3];
             $thisad = $ad;
             $output.= "<a href='".$thisad["urls"]["default"]."?utm_source=subito-widget'>";
             $output.= "<div id='subito-box' style='display:block; float:left; text-align:center; color:#3c4858; font-family: LFTEtica,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;'>"; //ad-box
@@ -57,7 +70,7 @@ class Subito_Plugin {
             $output.= "</div>"; //ad-box
             $output.= "</a>";
         }
-        }
+
         $output.= "</div>";
         return $output;
     }
