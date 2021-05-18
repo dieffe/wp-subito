@@ -34,11 +34,11 @@ class Subito_Plugin {
      * u and q parameters are self excluding. Limits applies to both.
      */
     public function render_subito_widget( $attributes, $content = null ) {
-        $query = $attributes['q'];
-        $cat = $attributes['c'];
-        $limit = $attributes['l'];
+        $query = isset($attributes['q']) ? $attributes['q'] : "";
+        $cat = isset($attributes['c']) ? $attributes['c'] : "";
+        $limit = isset($attributes['l']) ? $attributes['l'] : 5;
         //adding extract by user
-        $user = $attributes['u'];
+        $user = isset($attributes['u']) ? $attributes['u'] : "";
 
         //endpoint creation
         if($query!='') {
