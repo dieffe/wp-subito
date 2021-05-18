@@ -1,5 +1,4 @@
 <?php
-
    /*
    Plugin Name: Subito Widget
    Plugin URI: --
@@ -54,22 +53,26 @@ class Subito_Plugin {
         $query=str_replace(" ","+",$query);
         if($limit=='') $limit=5;
         $output="";
-        $output.= "<div style='display:flex'>";
+        $output.= "<div style='display:block; text-align:center'>";
         
         if($cat) {
             $endpoint.="&c=".$cat;
         }
         $xml = file_get_contents($endpoint);
         $json_a = json_decode($xml, true);
-
+        $counter = 0;
+        $classnomobile = "";
         foreach($json_a["ads"] as $ad) {
+            //add cladd to hide after the second ad on mobile
+            if($counter>1) { $classnomobile=" subito-widget-nomobile"; }
             $thisad = $ad;
             $output.= "<a href='".$thisad["urls"]["default"]."?utm_source=subito-widget'>";
-            $output.= "<div id='subito-box' style='display:block; float:left; text-align:center; color:#3c4858; font-family: LFTEtica,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;'>"; //ad-box
-            $output.= "<div style='margin-right:5px; background-image:url(".$thisad["images"][0]["scale"][3]["secureuri"]."); display: block; width: 150px; height: 150px; background-size: cover; background-color:#000;'></div>";
-            $output.= "<div style='margin-top:10px; display:inline-block; max-width:130px; text-overflow: ellipsis; overflow:hidden; height: 90px;'>".$ad["subject"]."</div>";
+            $output.= "<div class='subito-box".$classnomobile."'>"; //ad-box
+            $output.= "<div class='subito-widget-img' style='background-image:url(".$thisad["images"][0]["scale"][3]["secureuri"].");'></div>";
+            $output.= "<div class='subito-widget-title'>".$ad["subject"]."</div>";
             $output.= "</div>"; //ad-box
             $output.= "</a>";
+            $counter++;
         }
 
         $output.= "</div>";
