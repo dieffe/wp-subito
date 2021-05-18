@@ -1,0 +1,52 @@
+/* subito widget */
+  .subito-box {
+    display:inline-block;  
+    margin-right:5px; 
+    text-align:center; 
+    color:#3c4858; 
+    font-family: LFTEtica,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+  }
+
+  .subito-widget-img {
+    display: block; 
+    width: 150px; 
+    height: 150px; 
+    background-size: cover; 
+    background-color:#000;
+  }
+
+  .subito-widget-title {
+    margin-top:5px; 
+    display:inline-block; 
+    max-width:100px; 
+    text-overflow: ellipsis; 
+    overflow:hidden; 
+    height: 70px;
+    font-size: 16px;
+    background-color:#dfe3ed;
+  }
+
+  @media only screen and (max-width: 600px) {
+
+    .subito-box {
+        display:inline-block; 
+        /*float:left; */
+        text-align:center; 
+        color:#3c4858; 
+        font-family: LFTEtica,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+      }
+
+      .subito-widget-img {
+        margin-right:5px; 
+        display: block; 
+        width: 100px; 
+        height: 100px; 
+        background-size: cover; 
+        background-color:#000;
+      }
+
+      .subito-widget-nomobile {
+          display: none;
+      }
+
+  }
