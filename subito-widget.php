@@ -18,6 +18,7 @@ class Subito_Plugin {
      */
     public function __construct() {
         add_shortcode( 'subito_widget', array( $this, 'render_subito_widget' ) );
+        add_shortcode( 'subito_teaser', array( $this, 'render_subito_teaser' ) );
     }
 
 
@@ -39,6 +40,74 @@ class Subito_Plugin {
         $limit = isset($attributes['l']) ? $attributes['l'] : 5;
         //adding extract by user
         $user = isset($attributes['u']) ? $attributes['u'] : "";
+
+        //endpoint creation
+        if($query!='') {
+            $endpoint="https://hades.subito.it/v1/search/items?q=".$query."&lim=".$limit."&bust-cache=".rand(5, 15);
+        }
+
+        if($user!='') {
+            $endpoint="https://hades.subito.it/v1/search/items?uid=".$user."&lim=".$limit."&bust-cache=".rand(5, 15);
+        }
+
+        //sanify q
+        $query=str_replace(" ","+",$query);
+        if($limit=='') $limit=5;
+        $output="";
+        $output.= "<div class='subito-widget-wrapper' style='display:block; text-align:center'>";
+        
+        if($cat) {
+            $endpoint.="&c=".$cat;
+        }
+        $xml = file_get_contents($endpoint);
+        $json_a = json_decode($xml, true);
+        
+        $counter = 0;
+        $price = 0;
+        $classnomobile = "";
+        foreach($json_a["ads"] as $ad) {
+            //get the price
+            foreach($ad["features"] as $feat) {             
+                if($feat["uri"]=='/price') {
+                    $price  = $feat["values"][0]["value"];
+                }
+            }
+            //add cladd to hide after the second ad on mobile
+            if($counter>1) { $classnomobile=" subito-widget-nomobile"; }
+            $thisad = $ad;
+            $output.= "<div class='subito-box".$classnomobile."'>"; //ad-box
+            $output.= "<a href='".$thisad["urls"]["default"]."?utm_source=subito-widget'>";
+            $output.= "<div class='subito-widget-img' style='background-image:url(".$thisad["images"][0]["scale"][3]["secureuri"].");'></div>";
+            $output.= "<div class='subito-widget-title'>".$ad["subject"]."</div>";
+            $output.= "<div class='subito-widget-price'>".$price."</div>";
+            $output.= "</a>";
+            $output.= "</div>"; //ad-box
+            $counter++;
+        }
+
+        $output.= "</div>";
+        return $output;
+    }
+
+    /**
+     * Widget generation
+     *
+     * In the wp page insert the shortcode [subito_widget]
+     * Parameters:
+     * q [mandatory] query. No whitespaces, use + instead. e.g.: audi+a4 
+     * l number of ads rendered
+     * c category, e.g.: 16 ( Abbigliamento ed Accessori )
+     * u userid of the user you wanna extract the ads 
+     * 
+     * u and q parameters are self excluding. Limits applies to both.
+     */
+    public function render_subito_teaser( $attributes, $content = null ) {
+        $query = isset($attributes['q']) ? $attributes['q'] : "";
+        $cat = isset($attributes['c']) ? $attributes['c'] : "";
+        $limit = isset($attributes['l']) ? $attributes['l'] : 5;
+        //adding extract by user
+        $user = isset($attributes['u']) ? $attributes['u'] : "";
+        $caption = isset($attributes['caption']) ? $attributes['caption'] : "";
 
         //endpoint creation
         if($query!='') {
@@ -79,6 +148,7 @@ class Subito_Plugin {
         return $output;
     }
 
+ 
 }
 
 // Initialize the plugin
